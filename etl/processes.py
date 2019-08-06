@@ -78,6 +78,6 @@ FROM CB_BTC_PRICE_HISTORY""", 'CAT' )
 
 cmc_bucket = OTB('cmc_bucket', 'WOLF', """SELECT * FROM CMC_PRICE_HISTORY""", 'CAT')
 
-ora_to_ora = []
-# ora_to_ora = [cb, cmc]
+# ora_to_ora = []
+ora_to_ora = [cb, cmc]
 ora_to_bucket = [cb_bucket, cmc_bucket]
