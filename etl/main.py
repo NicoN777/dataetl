@@ -11,7 +11,10 @@ def create(sub):
 
 
 if __name__ == '__main__':
-    sub_processes = [["python", "load_buckets.py"], ["python", "load_oracle.py"]]
+    sub_processes = [["python", "jobs/load_buckets.py"],
+                     ["python", "jobs/load_oracle.py"],
+                     ["python", "jobs/load_queues.py"]]
+
     processes = Pool()
 
     for sp in sub_processes:

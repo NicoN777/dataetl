@@ -23,4 +23,6 @@ class OracleConnection:
 
 if __name__ == '__main__':
     w = OracleConnection.from_properties('WOLF')
-    l = OracleConnection.from_properties('LION')
+    # l = OracleConnection.from_properties('LION')
+
+    print('')

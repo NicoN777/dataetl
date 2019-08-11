@@ -1,83 +1,42 @@
-from collections import namedtuple
+from etl.jobs.base import *
 
-ETL = namedtuple('ETL', ['name', 'key_source', 'read_query', 'key_destination', 'write_stmt'])
+def ora_to_ora():
+    return [DB('cb',
+            'WOLF',
+            'TURTLE',
+            """SELECT EXTRACTION_DATE, CURRENCY, SELL_PRICE, 
+            SPOT_PRICE, BUY_PRICE FROM CB_BTC_PRICE_HISTORY""",
+            """INSERT INTO CB_BTC_PRICE_HISTORY(EXTRACTION_DATE,
+            CURRENCY, SELL_PRICE, SPOT_PRICE, BUY_PRICE ) 
+            VALUES(:EXTRACTION_DATE,:CURRENCY,:SELL_PRICE,
+            :SPOT_PRICE,:BUY_PRICE )"""),
+            DB('cmc',
+             'WOLF',
+             'TURTLE',
+             """SELECT EXTRACTION_DATE, CIRCULATING_SUPPLY, 
+                TOTAL_SUPPLY, MAX_SUPPLY, USD_PRICE, 
+                VOLUME_24_HOURS, PERCENT_CHANGE_1, 
+                PERCENT_CHANGE_24, PERCENT_CHANGE_7_DAYS, 
+                MARKET_CAP, LAST_UPDATED FROM CMC_PRICE_HISTORY""",
 
-OTB = namedtuple('OTB', ['name', 'key_source', 'read_query', 'key_destination'])
+             """INSERT INTO CMC_PRICE_HISTORY(
+                EXTRACTION_DATE, CIRCULATING_SUPPLY, 
+                TOTAL_SUPPLY, MAX_SUPPLY, USD_PRICE, 
+                VOLUME_24_HOURS, PERCENT_CHANGE_1, 
+                PERCENT_CHANGE_24, PERCENT_CHANGE_7_DAYS, 
+                MARKET_CAP, LAST_UPDATED
+                ) 
+                VALUES(
+                :EXTRACTION_DATE, :CIRCULATING_SUPPLY, 
+                :TOTAL_SUPPLY, :MAX_SUPPLY, :USD_PRICE, 
+                :VOLUME_24_HOURS, :PERCENT_CHANGE_1, 
+                :PERCENT_CHANGE_24, :PERCENT_CHANGE_7_DAYS, 
+                :MARKET_CAP, :LAST_UPDATED)""")]
 
-cb = ETL('cb', 'WOLF', """SELECT 
-EXTRACTION_DATE,
-CURRENCY,
-SELL_PRICE,
-SPOT_PRICE,
-BUY_PRICE 
-FROM CB_BTC_PRICE_HISTORY""", 'TURTLE', """
-INSERT INTO CB_BTC_PRICE_HISTORY(
-EXTRACTION_DATE,
-CURRENCY,
-SELL_PRICE,
-SPOT_PRICE,
-BUY_PRICE 
-)
-VALUES(
-:EXTRACTION_DATE,
-:CURRENCY,
-:SELL_PRICE,
-:SPOT_PRICE,
-:BUY_PRICE 
-)
-""")
+def ora_to_bucket():
+    return [Bucket('cb_bucket', 'WOLF', 'CAT', """SELECT * FROM CB_BTC_PRICE_HISTORY"""),
+            Bucket('cmc_bucket', 'WOLF', 'CAT', """SELECT * FROM CMC_PRICE_HISTORY""")]
 
-cmc = ETL('cmc', 'WOLF', """SELECT 
-EXTRACTION_DATE,         
-CIRCULATING_SUPPLY, 
-TOTAL_SUPPLY,   
-MAX_SUPPLY, 
-USD_PRICE, 
-VOLUME_24_HOURS, 
-PERCENT_CHANGE_1, 
-PERCENT_CHANGE_24, 
-PERCENT_CHANGE_7_DAYS, 
-MARKET_CAP, 
-LAST_UPDATED  
-FROM CMC_PRICE_HISTORY""", 'TURTLE', """
-INSERT INTO CMC_PRICE_HISTORY(
-EXTRACTION_DATE,         
-CIRCULATING_SUPPLY, 
-TOTAL_SUPPLY,   
-MAX_SUPPLY, 
-USD_PRICE, 
-VOLUME_24_HOURS, 
-PERCENT_CHANGE_1, 
-PERCENT_CHANGE_24, 
-PERCENT_CHANGE_7_DAYS, 
-MARKET_CAP, 
-LAST_UPDATED 
-)
-VALUES(
-:EXTRACTION_DATE,         
-:CIRCULATING_SUPPLY, 
-:TOTAL_SUPPLY,   
-:MAX_SUPPLY, 
-:USD_PRICE, 
-:VOLUME_24_HOURS, 
-:PERCENT_CHANGE_1, 
-:PERCENT_CHANGE_24, 
-:PERCENT_CHANGE_7_DAYS, 
-:MARKET_CAP, 
-:LAST_UPDATED  
-)
-""")
-
-cb_bucket = OTB('cb_bucket', 'WOLF', """SELECT 
-EXTRACTION_DATE,
-CURRENCY,
-SELL_PRICE,
-SPOT_PRICE,
-BUY_PRICE 
-FROM CB_BTC_PRICE_HISTORY""", 'CAT' )
-
-cmc_bucket = OTB('cmc_bucket', 'WOLF', """SELECT * FROM CMC_PRICE_HISTORY""", 'CAT')
-
-# ora_to_ora = []
-ora_to_ora = [cb, cmc]
-ora_to_bucket = [cb_bucket, cmc_bucket]
+def ora_to_rmq():
+    return [MessageQ('cb_rmq', 'WOLF', """SELECT * FROM CB_BTC_PRICE_HISTORY""", 'General', 'CB'),
+            MessageQ('cb_rmq', 'WOLF', """SELECT * FROM CMC_PRICE_HISTORY""", 'General', 'CMC')]

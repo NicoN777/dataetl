@@ -22,7 +22,6 @@ def get_properties(section:str):
     return properties
 
 def get_oracle_properties(section:str):
-    info = {}
     temp = get_properties(section)
     if temp ['sid']== '' and temp['service_name'] == '':
         raise ValueError('sid or service_name must be specified')

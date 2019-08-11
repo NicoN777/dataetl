@@ -17,6 +17,17 @@ def printer():
         item = yield
         print(item)
 
+
+@coroutine
+def load_oracle():
+    while True:
+        destination, writer, stmt, df = yield
+        writer(destination, stmt, df.to_dict(orient='record'))
+
+@coroutine
+def push_message():
+    pass
+
 @coroutine
 def upload_to_bucket():
     while True:
@@ -24,6 +35,10 @@ def upload_to_bucket():
         bucket.upload(full_file_path=path)
 
 
+@coroutine
+def cb_indicators(df):
+    pass
 
-
-
+@coroutine
+def cmc_indicators(df):
+    pass
