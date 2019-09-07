@@ -1,8 +1,7 @@
+#WORK IN PROGRESS
+
 import requests
-from data import OracleConnection
-from data import S3Bucket
 from etl.properties import get_properties
-from etl.message.rabbit import RabbitConnection, RabbitChannel, RQ
 
 class Job:
     def __init__(self, name=None, key_source=None, key_destination=None):

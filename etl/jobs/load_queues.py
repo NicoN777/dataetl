@@ -24,7 +24,7 @@ def load(job):
 
 if __name__ == '__main__':
     pool = Pool()
-    for job in ora_to_rmq:
+    for job in ora_to_rmq():
         pool.apply_async(func=load, args=(job,), callback=done, error_callback=error)
     pool.close()
     pool.join()

@@ -4,10 +4,8 @@ from multiprocessing import Pool
 from etl.callbacks import *
 
 
-
 def create(sub):
     subprocess.run(sub, stdout=sys.stdout)
-
 
 
 if __name__ == '__main__':
