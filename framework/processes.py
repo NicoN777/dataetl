@@ -1,4 +1,4 @@
-from etl.jobs.base import *
+from framework.jobs.base import *
 
 def ora_to_ora():
     return [DB('cb',

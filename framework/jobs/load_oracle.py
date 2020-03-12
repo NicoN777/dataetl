@@ -1,7 +1,7 @@
 from multiprocessing import Pool
-from etl.processes import ora_to_ora
+from framework.framework.conf.processes import ora_to_ora
 from data import OracleConnection, read_chunks, write_chunks
-from etl.callbacks import *
+from framework.callbacks import *
 
 
 def load(job):

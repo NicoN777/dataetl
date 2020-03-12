@@ -1,5 +1,6 @@
 import pika
-from etl.properties import get_properties
+# TODO
+# from framework.conf.properties import get_properties
 import time
 
 class RabbitConnection:
@@ -17,10 +18,11 @@ class RabbitConnection:
         )
         self.connection = pika.BlockingConnection(self.__parameters)
 
-    @classmethod
-    def from_properties(cls, key: str):
-        connection_parameters = get_properties(key)
-        return cls(**connection_parameters)
+    # @classmethod
+    # def from_properties(cls, key: str):
+        ## TODO
+        # connection_parameters = get_properties(key)
+        # return cls(**connection_parameters)
 
     def __enter__(self):
         if self.connection.is_closed or self.connection is None:

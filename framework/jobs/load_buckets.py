@@ -1,8 +1,8 @@
-from etl.processes import ora_to_bucket
+from framework.processes import ora_to_bucket
 from multiprocessing import Pool
-from etl.properties import csv_dir
-from etl.coros.coroutines import upload_to_bucket
-from etl.callbacks import done, error
+from framework.properties import csv_dir
+from framework.coros.coroutines import upload_to_bucket
+from framework.callbacks import done, error
 from data import OracleConnection, S3Bucket, read
 
 def load(job):

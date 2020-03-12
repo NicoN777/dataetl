@@ -1,8 +1,8 @@
 from multiprocessing import Pool
 from data import OracleConnection, read_chunks
-from etl.processes import ora_to_rmq
-from etl.callbacks import *
-from etl.message.rabbit import RabbitConnection, RabbitChannel
+from framework.processes import ora_to_rmq
+from framework.callbacks import *
+from framework.message.rabbit import RabbitConnection, RabbitChannel
 import json
 
 
