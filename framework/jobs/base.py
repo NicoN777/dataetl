@@ -1,7 +1,5 @@
-#WORK IN PROGRESS
 
 import requests
-from etl.properties import get_properties
 
 class Job:
     def __init__(self, name=None, key_source=None, key_destination=None):
@@ -31,7 +29,8 @@ class MessageQ(Job):
         super().__init__(name, key_source)
         self.read_query = read_query
         self.connection_key = connection_key
-        self.exchange = get_properties(exchange_key)
+        # TODO
+        # self.exchange = get_properties(exchange_key)
 
 class Http(Job):
     def __init__(self,name, key_source, key_destination):

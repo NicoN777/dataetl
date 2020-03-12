@@ -1,5 +1,5 @@
 import pandas as pd
-from etl.properties import _chunk_size
+from framework.framework.conf.properties import _chunk_size
 
 def read_chunks(connection, query=None, params={}):
     cursor = connection.cursor()

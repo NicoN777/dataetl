@@ -1,5 +1,5 @@
 from boto3.session import Session, Config
-from etl.properties import get_properties
+from framework.framework.conf.properties import get_properties
 import os
 
 

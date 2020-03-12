@@ -1,4 +1,4 @@
-from etl.properties import get_oracle_properties
+from framework.framework.conf.properties import get_oracle_properties
 import cx_Oracle
 
 
