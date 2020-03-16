@@ -1,11 +1,4 @@
-from conf.builder import get_configuration
-from message.kafkie import Kafka
-
-if __name__ == '__main__':
-   # kafka_consumer = Kafka(get('kafka', 'ORDERS'))
-   # kafka_consumer.consume()
-   kafka_producer = Kafka(get_configuration('kafka', 'ORDERS').properties)
-   test_data = """{"id":1,
+{"id":1,
   "customerName":"Nicolas Nunez",
   "shippingAddress":"3600 Bristol Motor Pass",
   "products":[
@@ -48,14 +41,4 @@ if __name__ == '__main__':
   ],
   "total":163.7,
   "date":1581535506251
-}"""
-
-   import json
-   test_data = test_data.replace('\n', '')
-   json_payload = json.dumps(test_data)
-   # js = json.loads(test_data)
-   # key = js['id']
-   # value = js
-   # key = json_payload['id']
-   value = json_payload
-   kafka_producer.produce(key=None, value=value)
+}

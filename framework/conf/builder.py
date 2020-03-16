@@ -1,6 +1,9 @@
 from abc import ABCMeta, abstractmethod
-from conf.db import OracleConfiguration
-from conf.s3 import S3Configuration
+from conf.db import *
+from conf.s3 import *
+from conf.logger import *
+from conf.kafka import *
+from conf.slacker import *
 
 
 class ConfigurationDirector:
@@ -32,14 +35,26 @@ class ConcreteConfigurationBuilder(ConfigurationBuilder):
         self.configuration = self.configuration_kind(self.key)
         return self.configuration
 
+
 configuration_director = ConfigurationDirector()
-oracle_config_builder = ConcreteConfigurationBuilder(OracleConfiguration, 'WOLF')
-s3_buckets_config_builder = ConcreteConfigurationBuilder(S3Configuration, 'CAT')
 
-configuration_director.construct(oracle_config_builder)
-configuration_director.construct(s3_buckets_config_builder)
-oracle_wolf = oracle_config_builder.configuration
-s3_cat = s3_buckets_config_builder.configuration
 
-print(oracle_wolf.get_properties())
-print(s3_cat.get_properties())
+def get_configuration(kind, key):
+    if kind == 'ora':
+        concrete_builder = ConcreteConfigurationBuilder(OracleConfiguration, key)
+    if kind == 'mongo':
+        concrete_builder = ConcreteConfigurationBuilder(MongoConfiguration, key)
+    if kind == 'cassandra':
+        concrete_builder = ConcreteConfigurationBuilder(CassandraConfiguration, key)
+    if kind == 'postgres':
+        concrete_builder = ConcreteConfigurationBuilder(PostgresConfiguration, key)
+    if kind == 'kafka':
+        concrete_builder = ConcreteConfigurationBuilder(KafkaTopicConfiguration, key)
+    if kind == 'logger':
+        concrete_builder = ConcreteConfigurationBuilder(LoggerConfiguration, key)
+    if kind == 's3':
+        concrete_builder = ConcreteConfigurationBuilder(S3Configuration, key)
+    if kind == 'slack':
+        concrete_builder = ConcreteConfigurationBuilder(SlackConfiguration, key)
+    configuration_director.construct(concrete_builder)
+    return concrete_builder.configuration
