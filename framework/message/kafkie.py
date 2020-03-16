@@ -1,13 +1,21 @@
-from conf.builder import get
 from confluent_kafka import Consumer, Producer, KafkaError
+
+
+def default_callback(error, message):
+    if error is not None:
+        print(f'Failed to deliver message: {message.value()}: {error.str()}')
+    else:
+        print(f'Message produced: {message.value()}')
 
 
 class Kafka:
     def __init__(self, configuration=None):
         if configuration is None:
-            raise ValueError("Configurations must be specified to initialize")
+            raise ValueError('Configurations must be specified to initialize')
         self.kafka_settings = configuration
         self.kafka_topic = self.kafka_settings.pop('topic.name')
+        self.producer = None
+        self.consumer = None
 
     def consume(self):
         self.consumer = Consumer(self.kafka_settings)
@@ -23,7 +31,6 @@ class Kafka:
                           f'Key: {data.key()} \n'
                           f'Value: {data.value()} \n'
                           f'Timestamp: {data.timestamp()}')
-                    print('Received message: {0}'.format(data.value()))
                 elif data.error().code() == KafkaError._PARTITION_EOF:
                     print('End of partition reached {0}/{1}'.format(data.topic(), data.partition()))
                 else:
@@ -35,13 +42,13 @@ class Kafka:
         finally:
             self.consumer.close()
 
-    def produce(self, key=None, value=None, callback=None):
-        self.producer = Producer(dict(self.kafka_settings['bootstrap.servers']))
+    def produce(self, key=None, value=None, callback=default_callback):
+        self.producer = \
+            Producer({'bootstrap.servers':
+                          self.kafka_settings['bootstrap.servers']})
         try:
             self.producer.produce(self.kafka_topic, value=value, callback=callback)
             self.producer.poll(0.5)
         except KeyboardInterrupt:
             pass
 
-if __name__ == '__main__':
-   pass

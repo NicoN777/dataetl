@@ -1,4 +1,5 @@
-from framework.framework.conf.configuration import Configuration
+from conf.configuration import Configuration
+
 
 class LoggerConfiguration(Configuration):
     pass
